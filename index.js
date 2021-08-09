@@ -1,31 +1,52 @@
+const nodeOS = require("os");
 const os = require("os-utils");
+const speedTest = require("speedtest-net");
 
 function getCPUInfo() {
-  const cpu = os.cpus();
+  const cpu = nodeOS.cpus();
   const cpuThreads = cpu.length;
   const cpuModel = cpu[0].model.trim();
   const cpuSpeed = cpu[0].speed / 1000;
 
-  return `CPU: ${cpuModel} [${cpuThreads / 2} Cores] @ ${cpuSpeed.toFixed(
+  return `CPU:  ${cpuModel} [${cpuThreads / 2} Cores] @ ${cpuSpeed.toFixed(
     3
   )} GHz`;
 }
 
 function getMemoryInfo() {
-  const freeMemory = os.freemem();
-  const totalMemory = os.totalmem();
-  const percentage = os.freememPercentage();
+  const freeMemory = os.freemem() / 1000; // In GB
+  const totalMemory = os.totalmem() / 1000; // In GB
+  const percentage = os.freememPercentage() * 100; // In 100.00%
+  return `RAM:  ${freeMemory.toFixed(2)} / ${totalMemory.toFixed(
+    2
+  )} GB available [${percentage.toFixed(2)}% used]`;
 }
 
-function getDeviceInfo() {
-  console.log(getCPUInfo());
-  console.log(os.loadavg());
-  console.log(os.type());
+function getHostname() {
+  return nodeOS.hostname();
 }
-// console.log("CPUS:", os.cpus());
-// console.log("Free RAM:", os.freemem());
-// console.log("Total RAM:", os.totalmem());
-// console.log("Platform:", os.platform());
-// console.log("Release:", os.release());
+
+function getOperatingSystem() {
+  const platform = nodeOS.platform();
+  const release = nodeOS.release();
+  const version = nodeOS.version();
+
+  return `OS:   ${version} ${release} [${platform}] `;
+}
+
+async function getDeviceInfo() {
+  console.log(getHostname());
+  console.log("---------------------------------------------\n");
+  console.log(getOperatingSystem());
+  console.log(getCPUInfo());
+  console.log(getMemoryInfo());
+  try {
+    console.log(await speedTest());
+  } catch (err) {
+    console.log(err.message);
+  } finally {
+    process.exit(0);
+  }
+}
 
 getDeviceInfo();
