@@ -4,15 +4,17 @@ const { getPlatform } = require("./platforms");
 const speedTest = require("speedtest-net");
 const si = require("systeminformation");
 
-function getCPUInfo() {
-  const cpu = nodeOS.cpus();
-  const cpuThreads = cpu.length;
-  const cpuModel = cpu[0].model.trim();
-  const cpuSpeed = cpu[0].speed / 1000;
+async function getCPUInfo() {
+  const cpu = await si.cpu();
+  // const cpu = nodeOS.cpus();
+  // const cpuThreads = cpu.length;
+  // const cpuModel = cpu[0].model.trim();
+  // const cpuSpeed = cpu[0].speed / 1000;
 
-  return `CPU:  ${cpuModel} [${cpuThreads / 2} Cores] @ ${cpuSpeed.toFixed(
-    3
-  )} GHz`;
+  // return `CPU:  ${cpuModel} [${cpuThreads / 2} Cores] @ ${cpuSpeed.toFixed(
+  //   3
+  // )} GHz`;
+  return cpu
 }
 
 function getMemoryInfo() {
@@ -56,15 +58,21 @@ async function getInternetSpeed() {
   return `Download Speed: ${downloadSpeed}\nUpload Speed: ${uploadSpeed}`;
 }
 
+async function getSystemInfo() {
+  const system = await si.system();
+  return `Device: ${system.model}`
+}
+
 async function getDeviceInfo() {
   console.log(getHostname());
   console.log("---------------------------------------------\n");
-  console.log(getOperatingSystem());
-  console.log(getCPUInfo());
-  console.log(getMemoryInfo());
-  console.log(await getInternetSpeed());
+  console.log(await getSystemInfo());
+  console.log(await getOperatingSystem());
+  console.log(await getCPUInfo());
+  console.log(await getMemoryInfo());
+  // console.log(await getInternetSpeed());
 
-  console.log(await si.system());
+  
 }
 
 getDeviceInfo();
