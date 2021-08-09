@@ -1,8 +1,7 @@
 const nodeOS = require("os");
 const os = require("os-utils");
-const NetworkSpeed = require("network-speed");
 const { getPlatform } = require("./platforms");
-const testNetworkSpeed = new NetworkSpeed();
+const speedTest = require("speedtest-net");
 
 function getCPUInfo() {
   const cpu = nodeOS.cpus();
@@ -36,23 +35,25 @@ function getOperatingSystem() {
   return `OS:   ${parsedPlatform} ${release}`;
 }
 
+async function speedTest() {
+  let downloadSpeed = "N/A";
+  let uploadSpeed = "N/A";
+
+  try {
+    const speedtest = await speedTest({ acceptLicense: true });
+  } catch (err) {
+    // Windows is not supported
+  }
+
+  return `Download Speed: ${downloadSpeed}\nUpload Speed: ${uploadSpeed}`;
+}
+
 async function getDeviceInfo() {
   console.log(getHostname());
   console.log("---------------------------------------------\n");
   console.log(getOperatingSystem());
   console.log(getCPUInfo());
   console.log(getMemoryInfo());
-  await getNetworkDownloadSpeed();
-  await getNetworkUploadSpeed();
-
-  const speedTest = require("speedtest-net");
-  try {
-    console.log(await speedTest());
-  } catch (err) {
-    console.log(err.message);
-  } finally {
-    process.exit(0);
-  }
 }
 
 getDeviceInfo();
