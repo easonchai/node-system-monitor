@@ -3,18 +3,37 @@ const os = require("os-utils");
 const { getPlatform } = require("./platforms");
 const speedTest = require("speedtest-net");
 const si = require("systeminformation");
+const { CYAN, GREEN, BLUE, RED, LIGHT_RED, YELLOW } = require("./colors");
 
 async function getCPUInfo() {
   const cpu = await si.cpu();
+  const cpuTemp = (await si.cpuTemperature()).main;
+  let styledCpuTemp = "N/A";
 
-  return `CPU:  ${cpu.vendor} ${cpu.family} [${cpu.physicalCores} Cores / ${cpu.cores} Threads] @ ${cpu.speed} GHz`;
+  if (cpuTemp < 0) {
+    styledCpuTemp = BLUE(cpuTemp + "°C")
+  } else if (cpuTemp > 0 && cpuTemp <= 20) {
+    styledCpuTemp = CYAN(cpuTemp + "°C")
+  } else if (cpuTemp > 20 && cpuTemp <= 50) {
+    styledCpuTemp = GREEN(cpuTemp + "°C")
+  } else if (cpuTemp > 50 && cpuTemp <= 80) {
+    styledCpuTemp = YELLOW(cpuTemp + "°C")
+  } else if (cpuTemp > 80 && cpuTemp <= 90) {
+    styledCpuTemp = LIGHT_RED(cpuTemp + "°C")
+  } else if (cpuTemp > 90) {
+    styledCpuTemp = RED(cpuTemp + "°C")
+  }
+
+  return `CPU:      ${cpu.brand} [${cpu.physicalCores} Cores / ${cpu.cores} Threads] @ ${cpu.speed} GHz\nCPU Temp: ${styledCpuTemp}`;
 }
 
-function getMemoryInfo() {
+async function getMemoryInfo() {
+  const memory = await si.mem();
+  console.log(memory)
   const freeMemory = os.freemem() / 1000; // In GB
   const totalMemory = os.totalmem() / 1000; // In GB
   const percentage = os.freememPercentage() * 100; // In 100.00%
-  return `RAM:  ${freeMemory.toFixed(2)} / ${totalMemory.toFixed(
+  return `RAM:      ${freeMemory.toFixed(2)} / ${totalMemory.toFixed(
     2
   )} GB available [${percentage.toFixed(2)}% used]`;
 }
@@ -28,7 +47,7 @@ function getOperatingSystem() {
   const parsedPlatform = getPlatform(platform);
   const release = nodeOS.release();
 
-  return `OS:   ${parsedPlatform} ${release}`;
+  return `OS:       ${parsedPlatform} ${release}`;
 }
 
 async function getInternetSpeed() {
@@ -53,7 +72,7 @@ async function getInternetSpeed() {
 
 async function getSystemInfo() {
   const system = await si.system();
-  return `Device: ${system.model}`
+  return `Device:   ${system.model}`
 }
 
 async function getDeviceInfo() {
