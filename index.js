@@ -1,9 +1,7 @@
-const nodeOS = require("os");
-const os = require("os-utils");
 const { getPlatform } = require("./platforms");
+const { CYAN, GREEN, BLUE, RED, LIGHT_RED, YELLOW } = require("./colors");
 const speedTest = require("speedtest-net");
 const si = require("systeminformation");
-const { CYAN, GREEN, BLUE, RED, LIGHT_RED, YELLOW } = require("./colors");
 
 async function getCPUInfo() {
   const cpu = await si.cpu();
@@ -47,16 +45,28 @@ async function getMemoryInfo() {
   return `RAM:      ${freeMemory.toFixed(2)} / ${totalMemory.toFixed(2)} GB available [${styledPercentage}]`;
 }
 
-function getHostname() {
-  return nodeOS.hostname();
+async function getHostname() {
+  const info = await si.osInfo();
+  return info.hostname;
 }
 
-function getOperatingSystem() {
-  const platform = nodeOS.platform();
-  const parsedPlatform = getPlatform(platform);
-  const release = nodeOS.release();
+async function getOperatingSystem() {
+  const os = await si.osInfo();
 
-  return `OS:       ${parsedPlatform} ${release}`;
+  return `OS:       ${os.distro}\nKernel:   ${os.kernel}`;
+}
+
+async function getDiskInfo() {
+  const block = await si.blockDevices();
+  
+  const disks = block.filter(item => item.type == "disk");
+  let disksText = "";
+
+  for(const disk of disks) {
+    disksText += `  ${disk.physical}: ${(disk.size / 1000000000).toFixed(2)} GB\n`
+  }
+
+  return `Disks:\n${disksText}`
 }
 
 async function getInternetSpeed() {
@@ -85,13 +95,14 @@ async function getSystemInfo() {
 }
 
 async function getDeviceInfo() {
-  console.log(getHostname());
+  console.log(await getHostname());
   console.log("---------------------------------------------\n");
   console.log(await getSystemInfo());
   console.log(await getOperatingSystem());
   console.log(await getCPUInfo());
   console.log(await getMemoryInfo());
   // console.log(await getInternetSpeed());
+  console.log(await getDiskInfo());
 
   
 }
