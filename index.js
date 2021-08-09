@@ -35,12 +35,19 @@ function getOperatingSystem() {
   return `OS:   ${parsedPlatform} ${release}`;
 }
 
-async function speedTest() {
+async function getInternetSpeed() {
   let downloadSpeed = "N/A";
   let uploadSpeed = "N/A";
 
   try {
     const speedtest = await speedTest({ acceptLicense: true });
+    const downloadBits = speedtest.download.bytes * 8;
+    const downloadTime = speedtest.download.elapsed;
+    const uploadBits = speedtest.upload.bytes * 8;
+    const uploadTime = speedtest.download.elapsed;
+
+    downloadSpeed = (downloadBits / downloadTime).toFixed(2) + " Mbps";
+    uploadSpeed = (uploadBits / uploadTime).toFixed(2) + " Mbps";
   } catch (err) {
     // Windows is not supported
   }
@@ -54,6 +61,7 @@ async function getDeviceInfo() {
   console.log(getOperatingSystem());
   console.log(getCPUInfo());
   console.log(getMemoryInfo());
+  console.log(getInternetSpeed());
 }
 
 getDeviceInfo();
