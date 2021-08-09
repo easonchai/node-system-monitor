@@ -29,13 +29,22 @@ async function getCPUInfo() {
 
 async function getMemoryInfo() {
   const memory = await si.mem();
-  console.log(memory)
-  const freeMemory = os.freemem() / 1000; // In GB
-  const totalMemory = os.totalmem() / 1000; // In GB
-  const percentage = os.freememPercentage() * 100; // In 100.00%
-  return `RAM:      ${freeMemory.toFixed(2)} / ${totalMemory.toFixed(
-    2
-  )} GB available [${percentage.toFixed(2)}% used]`;
+  const freeMemory = memory.free / 1000000000; // In GB
+  const totalMemory = memory.total / 1000000000; // In GB
+  const percentage = (memory.used / memory.total * 100).toFixed(2); // In 100.00%
+  let styledPercentage;
+
+  if (percentage < 50) {
+    styledPercentage = GREEN(percentage + "% used");
+  } else if (percentage >= 50 && percentage < 70) {
+    styledPercentage = YELLOW(percentage + "% used");
+  } else if (percentage >= 70 && percentage < 90) {
+    styledPercentage = LIGHT_RED(percentage + "% used");
+  } else {
+    styledPercentage = RED(percentage + "% used")
+  }
+
+  return `RAM:      ${freeMemory.toFixed(2)} / ${totalMemory.toFixed(2)} GB available [${styledPercentage}]`;
 }
 
 function getHostname() {
