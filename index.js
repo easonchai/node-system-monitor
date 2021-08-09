@@ -6,15 +6,8 @@ const si = require("systeminformation");
 
 async function getCPUInfo() {
   const cpu = await si.cpu();
-  // const cpu = nodeOS.cpus();
-  // const cpuThreads = cpu.length;
-  // const cpuModel = cpu[0].model.trim();
-  // const cpuSpeed = cpu[0].speed / 1000;
 
-  // return `CPU:  ${cpuModel} [${cpuThreads / 2} Cores] @ ${cpuSpeed.toFixed(
-  //   3
-  // )} GHz`;
-  return cpu
+  return `CPU:  ${cpu.vendor} ${cpu.family} [${cpu.physicalCores} Cores / ${cpu.cores} Threads] @ ${cpu.speed} GHz`;
 }
 
 function getMemoryInfo() {
