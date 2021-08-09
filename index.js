@@ -1,4 +1,3 @@
-const { getPlatform } = require("./platforms");
 const { CYAN, GREEN, BLUE, RED, LIGHT_RED, YELLOW } = require("./colors");
 const speedTest = require("speedtest-net");
 const si = require("systeminformation");
@@ -9,17 +8,17 @@ async function getCPUInfo() {
   let styledCpuTemp = "N/A";
 
   if (cpuTemp < 0) {
-    styledCpuTemp = BLUE(cpuTemp + "°C")
+    styledCpuTemp = BLUE(cpuTemp + "°C");
   } else if (cpuTemp > 0 && cpuTemp <= 20) {
-    styledCpuTemp = CYAN(cpuTemp + "°C")
+    styledCpuTemp = CYAN(cpuTemp + "°C");
   } else if (cpuTemp > 20 && cpuTemp <= 50) {
-    styledCpuTemp = GREEN(cpuTemp + "°C")
+    styledCpuTemp = GREEN(cpuTemp + "°C");
   } else if (cpuTemp > 50 && cpuTemp <= 80) {
-    styledCpuTemp = YELLOW(cpuTemp + "°C")
+    styledCpuTemp = YELLOW(cpuTemp + "°C");
   } else if (cpuTemp > 80 && cpuTemp <= 90) {
-    styledCpuTemp = LIGHT_RED(cpuTemp + "°C")
+    styledCpuTemp = LIGHT_RED(cpuTemp + "°C");
   } else if (cpuTemp > 90) {
-    styledCpuTemp = RED(cpuTemp + "°C")
+    styledCpuTemp = RED(cpuTemp + "°C");
   }
 
   return `CPU:      ${cpu.brand} [${cpu.physicalCores} Cores / ${cpu.cores} Threads] @ ${cpu.speed} GHz\nCPU Temp: ${styledCpuTemp}`;
@@ -29,7 +28,7 @@ async function getMemoryInfo() {
   const memory = await si.mem();
   const freeMemory = memory.free / 1000000000; // In GB
   const totalMemory = memory.total / 1000000000; // In GB
-  const percentage = (memory.used / memory.total * 100).toFixed(2); // In 100.00%
+  const percentage = ((memory.used / memory.total) * 100).toFixed(2); // In 100.00%
   let styledPercentage;
 
   if (percentage < 50) {
@@ -39,10 +38,12 @@ async function getMemoryInfo() {
   } else if (percentage >= 70 && percentage < 90) {
     styledPercentage = LIGHT_RED(percentage + "% used");
   } else {
-    styledPercentage = RED(percentage + "% used")
+    styledPercentage = RED(percentage + "% used");
   }
 
-  return `RAM:      ${freeMemory.toFixed(2)} / ${totalMemory.toFixed(2)} GB available [${styledPercentage}]`;
+  return `RAM:      ${freeMemory.toFixed(2)} / ${totalMemory.toFixed(
+    2
+  )} GB available [${styledPercentage}]`;
 }
 
 async function getHostname() {
@@ -61,9 +62,9 @@ async function getDriveInfo() {
 
   let drives = "";
 
-  for(const drive of fs) {
-    const sizeInGb = (drive.size / 1000000000).toFixed(2)
-    const availableInGb = (drive.available / 1000000000).toFixed(2)
+  for (const drive of fs) {
+    const sizeInGb = (drive.size / 1000000000).toFixed(2);
+    const availableInGb = (drive.available / 1000000000).toFixed(2);
     let usedPercentage;
 
     if (drive.use <= 30) {
@@ -76,10 +77,10 @@ async function getDriveInfo() {
       usedPercentage = RED(drive.use + "% used");
     }
 
-    drives += `  ${drive.fs}: ${availableInGb} / ${sizeInGb} GB available [${usedPercentage}]\n`
+    drives += `  ${drive.fs}: ${availableInGb} / ${sizeInGb} GB available [${usedPercentage}]\n`;
   }
 
-  return `Drives:\n${drives}`
+  return `Drives:\n${drives}`;
 }
 
 async function getInternetSpeed() {
@@ -104,7 +105,7 @@ async function getInternetSpeed() {
 
 async function getSystemInfo() {
   const system = await si.system();
-  return `Device:   ${system.model}`
+  return `Device:   ${system.model}`;
 }
 
 async function getDeviceInfo() {
