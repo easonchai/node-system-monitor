@@ -7,6 +7,7 @@
   "author": "Eason Chai <echai2905@gmail.com>",
   "license": "MIT",
   "dependencies": {
+    "network-speed": "^2.1.1",
     "os-utils": "^0.0.14",
     "speedtest-net": "^2.2.0"
   }

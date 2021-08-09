@@ -1,6 +1,7 @@
 const nodeOS = require("os");
 const os = require("os-utils");
-const speedTest = require("speedtest-net");
+const NetworkSpeed = require("network-speed");
+const testNetworkSpeed = new NetworkSpeed();
 
 function getCPUInfo() {
   const cpu = nodeOS.cpus();
@@ -34,12 +35,44 @@ function getOperatingSystem() {
   return `OS:   ${version} ${release} [${platform}] `;
 }
 
+async function getNetworkDownloadSpeed() {
+  const baseUrl = "https://eu.httpbin.org/stream-bytes/500000";
+  const fileSizeInBytes = 500000;
+  const speed = await testNetworkSpeed.checkDownloadSpeed(
+    baseUrl,
+    fileSizeInBytes
+  );
+  console.log(`Download Speed: ${JSON.stringify(speed)}`);
+}
+
+async function getNetworkUploadSpeed() {
+  const options = {
+    hostname: "ptsv2.com",
+    port: 80,
+    path: "/t/mf71r-1627483833/post",
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  };
+  const fileSizeInBytes = 200000;
+  const speed = await testNetworkSpeed.checkUploadSpeed(
+    options,
+    fileSizeInBytes
+  );
+  console.log(`Upload Speed: ${JSON.stringify(speed)}`);
+}
+
 async function getDeviceInfo() {
   console.log(getHostname());
   console.log("---------------------------------------------\n");
   console.log(getOperatingSystem());
   console.log(getCPUInfo());
   console.log(getMemoryInfo());
+  await getNetworkDownloadSpeed();
+  await getNetworkUploadSpeed();
+
+  const speedTest = require("speedtest-net");
   try {
     console.log(await speedTest());
   } catch (err) {
