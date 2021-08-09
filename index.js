@@ -41,9 +41,9 @@ async function getInternetSpeed() {
 
   try {
     const speedtest = await speedTest({ acceptLicense: true });
-    const downloadBits = speedtest.download.bytes * 8;
+    const downloadBits = (speedtest.download.bytes * 8) / 1000; // Mb
     const downloadTime = speedtest.download.elapsed;
-    const uploadBits = speedtest.upload.bytes * 8;
+    const uploadBits = (speedtest.upload.bytes * 8) / 1000; // Mb
     const uploadTime = speedtest.download.elapsed;
 
     downloadSpeed = (downloadBits / downloadTime).toFixed(2) + " Mbps";
