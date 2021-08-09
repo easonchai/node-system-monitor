@@ -8,6 +8,7 @@
   "license": "MIT",
   "dependencies": {
     "os-utils": "^0.0.14",
-    "speedtest-net": "^2.2.0"
+    "speedtest-net": "^2.2.0",
+    "systeminformation": "^5.8.0"
   }
 }

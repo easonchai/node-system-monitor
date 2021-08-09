@@ -2,6 +2,7 @@ const nodeOS = require("os");
 const os = require("os-utils");
 const { getPlatform } = require("./platforms");
 const speedTest = require("speedtest-net");
+const si = require("systeminformation");
 
 function getCPUInfo() {
   const cpu = nodeOS.cpus();
@@ -62,6 +63,8 @@ async function getDeviceInfo() {
   console.log(getCPUInfo());
   console.log(getMemoryInfo());
   console.log(await getInternetSpeed());
+
+  console.log(await si.system());
 }
 
 getDeviceInfo();
