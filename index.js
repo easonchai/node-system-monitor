@@ -61,7 +61,7 @@ async function getDeviceInfo() {
   console.log(getOperatingSystem());
   console.log(getCPUInfo());
   console.log(getMemoryInfo());
-  console.log(getInternetSpeed());
+  console.log(await getInternetSpeed());
 }
 
 getDeviceInfo();
