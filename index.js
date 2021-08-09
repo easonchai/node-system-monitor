@@ -56,17 +56,30 @@ async function getOperatingSystem() {
   return `OS:       ${os.distro}\nKernel:   ${os.kernel}`;
 }
 
-async function getDiskInfo() {
-  const block = await si.blockDevices();
-  
-  const disks = block.filter(item => item.type == "disk");
-  let disksText = "";
+async function getDriveInfo() {
+  const fs = await si.fsSize();
 
-  for(const disk of disks) {
-    disksText += `  ${disk.physical}: ${(disk.size / 1000000000).toFixed(2)} GB\n`
+  let drives = "";
+
+  for(const drive of fs) {
+    const sizeInGb = (drive.size / 1000000000).toFixed(2)
+    const availableInGb = (drive.available / 1000000000).toFixed(2)
+    let usedPercentage;
+
+    if (drive.use <= 30) {
+      usedPercentage = GREEN(drive.use + "% used");
+    } else if (drive.use > 30 && drive.use <= 70) {
+      usedPercentage = YELLOW(drive.use + "% used");
+    } else if (drive.use > 70 && drive.use <= 85) {
+      usedPercentage = LIGHT_RED(drive.use + "% used");
+    } else {
+      usedPercentage = RED(drive.use + "% used");
+    }
+
+    drives += `  ${drive.fs}: ${availableInGb} / ${sizeInGb} GB available [${usedPercentage}]\n`
   }
 
-  return `Disks:\n${disksText}`
+  return `Drives:\n${drives}`
 }
 
 async function getInternetSpeed() {
@@ -102,7 +115,7 @@ async function getDeviceInfo() {
   console.log(await getCPUInfo());
   console.log(await getMemoryInfo());
   // console.log(await getInternetSpeed());
-  console.log(await getDiskInfo());
+  console.log(await getDriveInfo());
 
   
 }
