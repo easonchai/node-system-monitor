@@ -21,7 +21,13 @@ async function getCPUInfo() {
     styledCpuTemp = RED(cpuTemp + "°C");
   }
 
-  return `CPU:      ${cpu.brand} [${cpu.physicalCores} Cores / ${cpu.cores} Threads] @ ${cpu.speed} GHz\nCPU Temp: ${styledCpuTemp}`;
+  return {
+    brand: cpu.brand,
+    cores: cpu.physicalCores,
+    threads: cpu.cores,
+    speed: cpu.speed,
+    temp: styledCpuTemp,
+  };
 }
 
 async function getMemoryInfo() {
@@ -41,46 +47,28 @@ async function getMemoryInfo() {
     styledPercentage = RED(percentage + "% used");
   }
 
-  return `RAM:      ${freeMemory.toFixed(2)} / ${totalMemory.toFixed(
-    2
-  )} GB available [${styledPercentage}]`;
+  return {
+    free: freeMemory.toFixed(2),
+    total: totalMemory.toFixed(2),
+    used: styledPercentage,
+  };
 }
 
 async function getHostname() {
   const info = await si.osInfo();
-  return info.hostname;
+  return { hostname: info.hostname };
 }
 
 async function getOperatingSystem() {
   const os = await si.osInfo();
 
-  return `OS:       ${os.distro}\nKernel:   ${os.kernel}`;
+  return { distro: os.distro, kernel: os.kernel };
 }
 
 async function getDriveInfo() {
-  const fs = await si.fsSize();
+  const drives = await si.fsSize();
 
-  let drives = "";
-
-  for (const drive of fs) {
-    const sizeInGb = (drive.size / 1000000000).toFixed(2);
-    const availableInGb = (drive.available / 1000000000).toFixed(2);
-    let usedPercentage;
-
-    if (drive.use <= 30) {
-      usedPercentage = GREEN(drive.use + "% used");
-    } else if (drive.use > 30 && drive.use <= 70) {
-      usedPercentage = YELLOW(drive.use + "% used");
-    } else if (drive.use > 70 && drive.use <= 85) {
-      usedPercentage = LIGHT_RED(drive.use + "% used");
-    } else {
-      usedPercentage = RED(drive.use + "% used");
-    }
-
-    drives += `  ${drive.fs}: ${availableInGb} / ${sizeInGb} GB available [${usedPercentage}]\n`;
-  }
-
-  return `Drives:\n${drives}`;
+  return { drives };
 }
 
 async function getInternetSpeed() {
@@ -100,23 +88,37 @@ async function getInternetSpeed() {
     // Windows is not supported
   }
 
-  return `Download Speed: ${downloadSpeed}\nUpload Speed: ${uploadSpeed}`;
+  return {
+    downloadSpeed,
+    uploadSpeed,
+  };
 }
 
 async function getSystemInfo() {
   const system = await si.system();
-  return `Device:   ${system.model}`;
+  return { model: system.model };
 }
 
-async function getDeviceInfo() {
-  console.log(await getHostname());
-  console.log("---------------------------------------------\n");
-  console.log(await getSystemInfo());
-  console.log(await getOperatingSystem());
-  console.log(await getCPUInfo());
-  console.log(await getMemoryInfo());
-  console.log(await getInternetSpeed());
-  console.log(await getDriveInfo());
+async function deviceInfo() {
+  hostname = await getHostname();
+  system = await getSystemInfo();
+  os = await getOperatingSystem();
+  cpu = await getCPUInfo();
+  memory = await getMemoryInfo();
+  internet = await getInternetSpeed();
+  drives = await getDriveInfo();
+
+  return {
+    ...hostname,
+    ...system,
+    ...os,
+    ...cpu,
+    ...memory,
+    ...internet,
+    ...drives,
+  };
 }
 
-getDeviceInfo();
+module.exports = {
+  deviceInfo,
+};
