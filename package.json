@@ -8,6 +8,7 @@
   "license": "MIT",
   "dependencies": {
     "enquirer": "^2.3.6",
+    "ora": "^5.4.1",
     "speedtest-net": "^2.2.0",
     "systeminformation": "^5.8.0"
   }

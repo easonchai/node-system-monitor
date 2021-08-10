@@ -1,10 +1,17 @@
 const { deviceInfo } = require("../utils/info");
 const { GREEN, RED, LIGHT_RED, YELLOW } = require("../utils/colors");
+const ora = require("ora");
 
 async function printDeviceInfo() {
-  console.log("Retrieving device info...");
+  const spinner = ora({
+    color: "cyan",
+    text: "Retrieving device info...",
+  });
 
+  spinner.start();
   const system = await deviceInfo();
+  spinner.stop();
+
   console.log(system.hostname);
   console.log("---------------------------------------------\n");
   console.log(`Device:   ${system.model}`);
