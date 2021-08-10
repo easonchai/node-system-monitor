@@ -1,12 +1,24 @@
 // https://discord.com/api/webhooks/874603485574885387/D8B3U_KREyUXFjw6_uDWLs2oaMV20FzIRBbMCyZL2Yup-qx-qOWE0lvGoAfCrMkNnsdW
 
-import {
+const {
   servicePrompt,
   discordUrlPrompt,
   telegramTokenPrompt,
-} from "./prompts";
+} = require("./prompts");
+
+const fs = require("fs");
 
 let VERBOSE = false;
+const filename = ".secret.json";
+
+function printError(message, error) {
+  console.log(message);
+  if (VERBOSE) {
+    console.log(error);
+  } else {
+    console.log("Run with --verbose for more information.");
+  }
+}
 
 function getArguments() {
   const args = process.argv.slice(2);
@@ -41,30 +53,35 @@ async function getInformation() {
       process.exit(0);
     }
 
-    let data;
+    let data = "{ ";
 
     for (const service of services) {
       if (service === "Discord") {
         const discordUrl = await discordUrlPrompt.run();
-        console.log(discordUrl);
+        data += `discord: ${discordUrl}, `;
       } else if (service === "Telegram") {
         const telegramToken = await telegramTokenPrompt.run();
-        console.log(telegramToken);
+        data += `telegram: ${telegramToken}, `;
       }
     }
 
-    fs.writeFile(path, data, { flag: "wx" }, function (err) {
-      if (err) throw err;
-      console.log("It's saved!");
-    });
-  } catch (error) {
-    if (error != "") {
-      console.log("An error occured. Please run setup.js again!");
-      if (VERBOSE) {
-        console.log(error);
-      } else {
-        console.log("Run with --verbose for more information.");
+    data += " }";
+
+    fs.writeFile(
+      `${__dirname}/${filename}`,
+      data,
+      { flag: "w" },
+      function (err) {
+        if (err) {
+          printError("Error saving to file.");
+          process.exit(0);
+        }
+        console.log("\033[1;32mSetup successfully!\033[0m");
       }
+    );
+  } catch (error) {
+    if (error && error != "") {
+      printError("An error occured. Please run setup.js again!");
     }
   }
 }
