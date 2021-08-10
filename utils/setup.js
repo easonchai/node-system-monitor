@@ -70,7 +70,7 @@ async function getInformation() {
     data += " }";
 
     fs.writeFile(
-      `${__dirname}/${filename}`,
+      `${__dirname}/../${filename}`,
       data,
       { flag: "w" },
       function (err) {

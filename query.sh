@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 if ! node -v > /dev/null
 then

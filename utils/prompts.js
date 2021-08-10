@@ -2,7 +2,7 @@ const { MultiSelect, Input } = require("enquirer");
 
 const servicePrompt = new MultiSelect({
   name: "service",
-  message: "Pick the service to set up",
+  message: "Pick the service to set up (Space to select)",
   limit: 2,
   choices: [
     { name: "Discord", value: "discord" },
