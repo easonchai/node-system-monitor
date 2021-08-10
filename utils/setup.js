@@ -5,20 +5,11 @@ const {
   discordUrlPrompt,
   telegramTokenPrompt,
 } = require("./prompts");
-
+const { printError } = require("./helpers");
 const fs = require("fs");
 
 let VERBOSE = false;
 const filename = ".secret.json";
-
-function printError(message, error) {
-  console.log(message);
-  if (VERBOSE) {
-    console.log(error);
-  } else {
-    console.log("Run with --verbose for more information.");
-  }
-}
 
 function getArguments() {
   const args = process.argv.slice(2);
@@ -43,7 +34,7 @@ function setVerbose(argument) {
   }
 }
 
-async function getInformation() {
+async function setupInformation() {
   try {
     getArguments();
     const services = await servicePrompt.run();
@@ -75,17 +66,24 @@ async function getInformation() {
       { flag: "w" },
       function (err) {
         if (err) {
-          printError("Error saving to file.");
+          printError("Error saving to file.", err, VERBOSE);
           process.exit(0);
         }
         console.log("\033[1;32mSetup successfull!\033[0m");
       }
     );
+
+    return data;
   } catch (error) {
     if (error && error != "") {
-      printError("An error occured. Please run setup.js again!");
+      printError(
+        "An error occured. Please run setup.js again!",
+        error,
+        VERBOSE
+      );
     }
+    process.exit(0);
   }
 }
 
-getInformation();
+module.exports = { setupInformation };
