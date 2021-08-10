@@ -1,5 +1,5 @@
 {
-  "name": "rpi-nodejs-monitor",
+  "name": "node-system-monitor",
   "version": "0.0.1",
   "description": "A tool to monitor information about your device",
   "main": "index.js",

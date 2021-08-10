@@ -5,38 +5,16 @@ const {
   discordUrlPrompt,
   telegramTokenPrompt,
 } = require("./prompts");
-const { printError } = require("./helpers");
+const { printError, getArguments } = require("./helpers");
 const fs = require("fs");
 
 let VERBOSE = false;
 const filename = ".secret.json";
 
-function getArguments() {
-  const args = process.argv.slice(2);
-
-  switch (args.length) {
-    case 0:
-      return;
-    case 1:
-      setVerbose(args[0]);
-      return;
-    default:
-      console.log("Too many arguments!");
-      return;
-  }
-}
-
-function setVerbose(argument) {
-  if (argument === "-v" || argument === "--verbose") VERBOSE = true;
-  else {
-    console.log("Unknown argument", argument);
-    process.exit(0);
-  }
-}
-
 async function setupInformation() {
+  VERBOSE = getArguments();
+
   try {
-    getArguments();
     const services = await servicePrompt.run();
 
     if (services.length < 1) {

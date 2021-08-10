@@ -29,6 +29,6 @@ The second mode is daemon mode. This will run a Discord webhook & Telegram bot i
 TODO:
 
 - [] Add cron task to update nodejs
-- [] Add script to call in nodejs
+- [] Daemon mode
 - [] Add Telegram bot support
 - [] Add Discord webhook support
