@@ -24,21 +24,6 @@ const telegramTokenPrompt = new Input({
   initial: "6734...Js48",
 });
 
-// servicePrompt
-//   .run()
-//   .then((answer) => console.log("Answer:", answer))
-//   .catch(console.error);
-
-// discordUrlPrompt
-//   .run()
-//   .then((answer) => console.log("Answer:", answer))
-//   .catch(console.error);
-
-// telegramTokenPrompt
-//   .run()
-//   .then((answer) => console.log("Answer:", answer))
-//   .catch(console.error);
-
 function getArguments() {
   const args = process.argv.slice(2);
 
@@ -67,6 +52,21 @@ async function getInformation() {
   try {
     getArguments();
     const services = await servicePrompt.run();
+
+    if (services.length < 1) {
+      console.log("No services selected. Quitting...");
+      process.exit(0);
+    }
+
+    for (const service of services) {
+      if (service === "Discord") {
+        const discordUrl = await discordUrlPrompt.run();
+        console.log(discordUrl);
+      } else if (service === "Telegram") {
+        const telegramToken = await telegramTokenPrompt.run();
+        console.log(telegramToken);
+      }
+    }
   } catch (error) {
     if (error != "") {
       console.log("An error occured. Please run setup.js again!");
