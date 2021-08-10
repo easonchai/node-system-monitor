@@ -2,6 +2,8 @@
 
 const { MultiSelect, Input } = require("enquirer");
 
+let VERBOSE = false;
+
 const servicePrompt = new MultiSelect({
   name: "service",
   message: "Pick the service to set up",
@@ -32,7 +34,49 @@ const telegramTokenPrompt = new Input({
 //   .then((answer) => console.log("Answer:", answer))
 //   .catch(console.error);
 
-telegramTokenPrompt
-  .run()
-  .then((answer) => console.log("Answer:", answer))
-  .catch(console.error);
+// telegramTokenPrompt
+//   .run()
+//   .then((answer) => console.log("Answer:", answer))
+//   .catch(console.error);
+
+function getArguments() {
+  const args = process.argv.slice(2);
+
+  switch (args.length) {
+    case 0:
+      return;
+    case 1:
+      setVerbose(args[0]);
+      return;
+    default:
+      console.log("Too many arguments!");
+      return;
+  }
+}
+
+function setVerbose(argument) {
+  console.log("here");
+  if (argument === "-v" || argument === "--verbose") VERBOSE = true;
+  else {
+    console.log("Unknown argument", argument);
+    process.exit(0);
+  }
+}
+
+async function getInformation() {
+  try {
+    getArguments();
+    const services = await servicePrompt.run();
+  } catch (error) {
+    if (error != "") {
+      console.log("An error occured. Please run setup.js again!");
+      if (VERBOSE) {
+        console.log(error);
+      } else {
+        console.log("Run with --verbose for more information.");
+      }
+    }
+  }
+}
+
+getInformation();
