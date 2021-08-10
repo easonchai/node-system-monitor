@@ -1,28 +1,12 @@
 // https://discord.com/api/webhooks/874603485574885387/D8B3U_KREyUXFjw6_uDWLs2oaMV20FzIRBbMCyZL2Yup-qx-qOWE0lvGoAfCrMkNnsdW
 
-const { MultiSelect, Input } = require("enquirer");
+import {
+  servicePrompt,
+  discordUrlPrompt,
+  telegramTokenPrompt,
+} from "./prompts";
 
 let VERBOSE = false;
-
-const servicePrompt = new MultiSelect({
-  name: "service",
-  message: "Pick the service to set up",
-  limit: 2,
-  choices: [
-    { name: "Discord", value: "discord" },
-    { name: "Telegram", value: "telegram" },
-  ],
-});
-
-const discordUrlPrompt = new Input({
-  message: "Paste your Discord Webhook URL:",
-  initial: "https://discord.com/api/webhooks/874...",
-});
-
-const telegramTokenPrompt = new Input({
-  message: "Paste your Telegram Bot API Token:",
-  initial: "6734...Js48",
-});
 
 function getArguments() {
   const args = process.argv.slice(2);
@@ -40,7 +24,6 @@ function getArguments() {
 }
 
 function setVerbose(argument) {
-  console.log("here");
   if (argument === "-v" || argument === "--verbose") VERBOSE = true;
   else {
     console.log("Unknown argument", argument);
@@ -58,6 +41,8 @@ async function getInformation() {
       process.exit(0);
     }
 
+    let data;
+
     for (const service of services) {
       if (service === "Discord") {
         const discordUrl = await discordUrlPrompt.run();
@@ -67,6 +52,11 @@ async function getInformation() {
         console.log(telegramToken);
       }
     }
+
+    fs.writeFile(path, data, { flag: "wx" }, function (err) {
+      if (err) throw err;
+      console.log("It's saved!");
+    });
   } catch (error) {
     if (error != "") {
       console.log("An error occured. Please run setup.js again!");
