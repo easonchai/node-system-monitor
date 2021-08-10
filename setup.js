@@ -55,14 +55,16 @@ async function getInformation() {
 
     let data = "{ ";
 
-    for (const service of services) {
+    for (const [index, service] of services.entries()) {
       if (service === "Discord") {
         const discordUrl = await discordUrlPrompt.run();
-        data += `discord: ${discordUrl}, `;
+        data += `"discord": "${discordUrl}"`;
       } else if (service === "Telegram") {
         const telegramToken = await telegramTokenPrompt.run();
-        data += `telegram: ${telegramToken}, `;
+        data += `"telegram": "${telegramToken}"`;
       }
+
+      if (index != services.length - 1) data += ", ";
     }
 
     data += " }";
@@ -76,7 +78,7 @@ async function getInformation() {
           printError("Error saving to file.");
           process.exit(0);
         }
-        console.log("\033[1;32mSetup successfully!\033[0m");
+        console.log("\033[1;32mSetup successfull!\033[0m");
       }
     );
   } catch (error) {
