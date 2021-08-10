@@ -1,3 +1,3 @@
 #!/bin/sh
 
-node info.js
+node services/query.js
