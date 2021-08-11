@@ -33,7 +33,7 @@ There are two modes you can run it in. The first mode is the simplest. It basica
 The second mode is daemon mode. This will run a Discord webhook & Telegram bot in the background for you to get updates from. It will run you through the basic setup process on first run. To activate it, just type:
 
 ```bash
-./daemon.sh
+sudo ./daemon.sh
 ```
 
 TODO:
