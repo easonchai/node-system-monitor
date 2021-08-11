@@ -1,4 +1,6 @@
-function format(data) {
+const { GREEN, RED, LIGHT_RED, YELLOW } = require("../utils/colors");
+
+function format(system) {
   let drives = "";
 
   for (const drive of system.drives) {
@@ -20,11 +22,15 @@ function format(data) {
   }
 
   return `
+Last Updated: ${new Date(system.lastUpdated).toLocaleString()}
+
 ${system.hostname}
 ---------------------------------------------
 Device:   ${system.model}
 OS:       ${system.distro}\nKernel:   ${system.kernel}
-CPU:      ${system.brand} [${system.cores} Cores / ${system.threads} Threads] @ ${system.speed} GHz\nCPU Temp: ${system.temp}
+CPU:      ${system.brand} [${system.cores} Cores / ${
+    system.threads
+  } Threads] @ ${system.speed} GHz\nCPU Temp: ${system.temp}
 RAM:      ${system.free} / ${system.total} GB available [${system.used}]
 Download Speed: ${system.downloadSpeed}\nUpload Speed: ${system.uploadSpeed}
 Drives:\n${drives}
