@@ -1,8 +1,14 @@
-# Raspberry Pi NodeJS Monitor
+# ⏲ Node System Monitor
 
-A tool to monitor information about your Raspberry Pi & can be configured to update its status via Discord/Telegram
+A tool to monitor information about your device & can be configured to update its status via Discord webhooks/Telegram bot.
 
-## Getting Started
+## 💻 Compatibility
+
+This tool works on all devices, including Windows with some exceptions. You will not be able to get download & upload speeds on Windows at the moment.
+
+This was initially designed to be run on Raspberry Pis, however, it will work on all devices as long as you have NodeJS installed.
+
+## 🏃‍♂️ Getting Started
 
 You need [NodeJS](https://nodejs.org/en/download/) installed on your system (and preferrably [yarn](https://yarnpkg.com/lang/en/docs/install/), but npm works just as well!). If you don't have NodeJS installed, you can follow the script below:
 
@@ -22,7 +28,7 @@ This will install nvm, NodeJS, npm, yarn & the required dependencies. Then, you 
 node services/query.sh
 ```
 
-### Modes
+### 💠 Modes
 
 There are two modes you can run it in. The first mode is the simplest. It basically tells you information about your device when you query it. To run this mode, you just need to enter:
 
@@ -41,7 +47,3 @@ The daemon process is handled by [pm2](https://github.com/Unitech/pm2). You can 
 ```bash
 npx pm2 stop daemon
 ```
-
-TODO:
-
-- [] Check if bot is correct
