@@ -107,6 +107,7 @@ async function deviceInfo() {
   memory = await getMemoryInfo();
   internet = await getInternetSpeed();
   drives = await getDriveInfo();
+  lastUpdated = Date.now();
 
   return {
     ...hostname,
@@ -116,6 +117,7 @@ async function deviceInfo() {
     ...memory,
     ...internet,
     ...drives,
+    lastUpdated,
   };
 }
 

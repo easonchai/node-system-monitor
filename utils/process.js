@@ -1,16 +1,29 @@
 const { deviceInfo } = require("./info");
+const fs = require("fs");
+const path = require("path");
 
-let interval;
-const intervalDuration = 60000;
-
-function getDataOnInterval() {
-  interval = setInterval(async () => {
-    const data = await deviceInfo();
-    // Save to file here
-  }, intervalDuration);
+function saveToDisk(data) {
+  fs.writeFile(
+    path.resolve(`${__dirname}/../${filename}`),
+    JSON.stringify(data),
+    { flag: "w" },
+    function (err) {
+      if (err) {
+        printError("", err, VERBOSE);
+      }
+    }
+  );
 }
 
-function killInterval() {
+function getDataOnInterval(duration = 60000) {
+  const interval = setInterval(async () => {
+    const data = await deviceInfo();
+    saveToDisk(data);
+  }, duration);
+  return interval;
+}
+
+function killInterval(interval) {
   clearInterval(interval);
 }
 
