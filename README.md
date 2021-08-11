@@ -2,6 +2,13 @@
 
 A tool to monitor information about your device & can be configured to update its status via Discord webhooks/Telegram bot.
 
+## 📝 Table of Contents
+
+- [Compatibility](#-💻-Compatibility)
+- [Getting Started](##-🏃‍♂️-Getting-Started)
+- [Compatibility](#compatibility)
+- [Compatibility](#compatibility)
+
 ## 💻 Compatibility
 
 This tool works on all devices, including Windows with some exceptions. You will not be able to get download & upload speeds on Windows at the moment.
