@@ -4,12 +4,22 @@ A tool to monitor information about your Raspberry Pi & can be configured to upd
 
 ## Getting Started
 
-You need NodeJS installed on your system.
-To get it running with just NodeJS, run these commands:
+You need NodeJS installed on your system. If you don't have NodeJS installed, you can follow the script below:
 
 ```bash
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.38.0/install.sh | bash
+export NVM_DIR="$([ -z "${XDG_CONFIG_HOME-}" ] && printf %s "${HOME}/.nvm" || printf %s "${XDG_CONFIG_HOME}/nvm")"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+nvm install node
+nvm use node
+npm i -g yarn
 yarn
-node index.js
+```
+
+This will install NodeJS, npm, yarn & the required dependencies. Then, you can query your system's info using:
+
+```bash
+./query.sh
 ```
 
 ### Modes
