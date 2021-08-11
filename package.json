@@ -1,9 +1,9 @@
 {
   "name": "node-system-monitor",
   "version": "0.0.1",
-  "description": "A tool to monitor information about your device",
+  "description": "A tool to monitor information about your devices",
   "main": "index.js",
-  "repository": "git@github.com:easonchai/rpi-nodejs-monitor.git",
+  "repository": "git@github.com:easonchai/node-system-monitor.git",
   "author": "Eason Chai <echai2905@gmail.com>",
   "license": "MIT",
   "dependencies": {
