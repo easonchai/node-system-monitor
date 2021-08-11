@@ -25,15 +25,17 @@ const addOrEditPrompt = new Select({
   choices: ["Add", "Edit"],
 });
 
-const addPrompt = (choices = new MultiSelect({
-  message: "What secrets do you want to add?",
-  choices,
-}));
+const addPrompt = (choices) =>
+  new MultiSelect({
+    message: "What secrets do you want to add?",
+    choices,
+  });
 
-const editPrompt = (choices = new MultiSelect({
-  message: "Which secrets do you want to edit?",
-  choices,
-}));
+const editPrompt = (choices) =>
+  new MultiSelect({
+    message: "Which secrets do you want to edit?",
+    choices,
+  });
 
 module.exports = {
   servicePrompt,
