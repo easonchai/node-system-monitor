@@ -4,10 +4,10 @@ A tool to monitor information about your device & can be configured to update it
 
 ## 📝 Table of Contents
 
-- [Compatibility](#-💻-Compatibility)
-- [Getting Started](##-🏃‍♂️-Getting-Started)
-- [Compatibility](#compatibility)
-- [Compatibility](#compatibility)
+- [Compatibility](#-compatibility)
+- [Getting Started](#%EF%B8%8F-getting-started)
+  - [Modes](#-modes)
+  - [Setting Up Tokens](#-setting-up-tokens)
 
 ## 💻 Compatibility
 
@@ -55,7 +55,7 @@ The daemon process is handled by [pm2](https://github.com/Unitech/pm2). You can 
 npx pm2 stop daemon
 ```
 
-### Setting Up Tokens
+### 🔑 Setting Up Tokens
 
 Discord webhooks & Telegram bot tokens are immediately set up on first run.
 
