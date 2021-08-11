@@ -7,6 +7,7 @@
   "author": "Eason Chai <echai2905@gmail.com>",
   "license": "MIT",
   "dependencies": {
+    "axios": "^0.21.1",
     "enquirer": "^2.3.6",
     "ora": "^5.4.1",
     "speedtest-net": "^2.2.0",
