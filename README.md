@@ -36,6 +36,12 @@ The second mode is daemon mode. This will run a Discord webhook & Telegram bot i
 npx pm2 start services/daemon.js
 ```
 
+The daemon process is handled by pm2. You can find more information on it's GitHub page. To stop the process, just type:
+
+```bash
+npx pm2 stop daemon
+```
+
 TODO:
 
 - [] Daemon mode
