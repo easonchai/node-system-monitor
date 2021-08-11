@@ -6,6 +6,7 @@ const axios = require("axios");
 const { printError } = require("../utils/helpers");
 const { setupInformation } = require("../utils/setup");
 const { deviceInfo } = require("../utils/info");
+const { format } = require("../utils/output");
 const secretFilename = ".secret.json";
 const systemFilename = "system.json";
 let interval;
@@ -31,7 +32,7 @@ function getDataOnInterval(duration = 60000) {
 
     axios
       .post(secret["discord"], {
-        content: JSON.stringify(data),
+        content: format(data, false),
         username: data.hostname,
       })
       .then(() => {
@@ -70,6 +71,22 @@ async function runDaemon() {
         .post(secret["discord"], {
           content: "✅ Node System Monitor is online!",
           username: "Node System Monitor",
+        })
+        .then(() => {
+          console.log("Online!");
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+
+      // First update
+      const data = await deviceInfo();
+      saveToDisk(data);
+
+      axios
+        .post(secret["discord"], {
+          content: format(data, false),
+          username: data.hostname,
         })
         .then(() => {
           console.log("Update success");

@@ -1,6 +1,6 @@
 const { GREEN, RED, LIGHT_RED, YELLOW } = require("../utils/colors");
 
-function format(system) {
+function format(system, colored = true) {
   let drives = "";
 
   for (const drive of system.drives) {
@@ -21,7 +21,7 @@ function format(system) {
     drives += `  ${drive.fs}: ${availableInGb} / ${sizeInGb} GB available [${usedPercentage}]\n`;
   }
 
-  return `
+  const output = `
 Last Updated: ${new Date(system.lastUpdated).toLocaleString()}
 
 ${system.hostname}
@@ -35,6 +35,14 @@ RAM:      ${system.free} / ${system.total} GB available [${system.used}]
 Download Speed: ${system.downloadSpeed}\nUpload Speed: ${system.uploadSpeed}
 Drives:\n${drives}
 `;
+
+  if (!colored) {
+    return output.replace(
+      /[\u001b\u009b][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/g,
+      ""
+    );
+  }
+  return output;
 }
 
 module.exports = {
