@@ -10,7 +10,7 @@ done
 
 if ! node -v > /dev/null
 then
-    /bin/bash ./setup.sh
+    /bin/bash ./dependency_setup.sh
 fi
 
 if $verbose; then

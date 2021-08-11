@@ -3,6 +3,7 @@
 const fs = require("fs");
 const path = require("path");
 const axios = require("axios");
+const TelegramBot = require("node-telegram-bot-api");
 const { printError } = require("../utils/helpers");
 const { setupInformation } = require("../utils/setup");
 const { deviceInfo } = require("../utils/info");
@@ -11,6 +12,7 @@ const secretFilename = ".secret.json";
 const systemFilename = "system.json";
 let interval;
 let secret;
+let content;
 
 function saveToDisk(data) {
   fs.writeFile(
@@ -30,17 +32,21 @@ function getDataOnInterval(duration = 60000) {
     const data = await deviceInfo();
     saveToDisk(data);
 
-    axios
-      .post(secret["discord"], {
-        content: format(data, false),
-        username: data.hostname,
-      })
-      .then(() => {
-        console.log("Update success");
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    content = format(data, false);
+
+    if (secret["discord"]) {
+      axios
+        .post(secret["discord"], {
+          content,
+          username: data.hostname,
+        })
+        .then(() => {
+          console.log("Update Discord success");
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
   }, duration);
   return interval;
 }
@@ -82,10 +88,11 @@ async function runDaemon() {
       // First update
       const data = await deviceInfo();
       saveToDisk(data);
+      content = format(data, false);
 
       axios
         .post(secret["discord"], {
-          content: format(data, false),
+          content,
           username: data.hostname,
         })
         .then(() => {
@@ -96,7 +103,19 @@ async function runDaemon() {
         });
     }
     if (secret["telegram"]) {
-      console.log("telegram");
+      const token = secret["telegram"];
+
+      const bot = new TelegramBot(token, { polling: true });
+
+      bot.onText(/\/query (.+)/, (msg) => {
+        const chatId = msg.chat.id;
+        bot.sendMessage(chatId, content);
+      });
+
+      bot.on("message", (msg) => {
+        const chatId = msg.chat.id;
+        bot.sendMessage(chatId, "Type /query to query your system");
+      });
     }
   } else {
     await setupInformation();

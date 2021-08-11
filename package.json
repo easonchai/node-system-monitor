@@ -9,6 +9,7 @@
   "dependencies": {
     "axios": "^0.21.1",
     "enquirer": "^2.3.6",
+    "node-telegram-bot-api": "^0.54.0",
     "ora": "^5.4.1",
     "speedtest-net": "^2.2.0",
     "systeminformation": "^5.8.0"
