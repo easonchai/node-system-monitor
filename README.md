@@ -47,3 +47,9 @@ The daemon process is handled by [pm2](https://github.com/Unitech/pm2). You can 
 ```bash
 npx pm2 stop daemon
 ```
+
+### Setting Up Tokens
+
+Discord webhooks & Telegram bot tokens are immediately set up on first run.
+
+Currently, if you wish to edit your Discord webhook / Telegram bot token, you can manually delete .secret.json and run the daemon again. It will go through the setup again.
