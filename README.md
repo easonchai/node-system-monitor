@@ -29,5 +29,4 @@ The second mode is daemon mode. This will run a Discord webhook & Telegram bot i
 TODO:
 
 - [] Daemon mode
-- [] Add Telegram bot support
 - [] Check if bot is correct
