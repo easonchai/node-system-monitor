@@ -1,6 +1,22 @@
 const { deviceInfo } = require("../utils/info");
 const { GREEN, RED, LIGHT_RED, YELLOW } = require("../utils/colors");
 const ora = require("ora");
+const fs = require("fs");
+const path = require("path");
+const filename = "system.json";
+
+function saveToDisk(data) {
+  fs.writeFile(
+    path.resolve(`${__dirname}/../${filename}`),
+    JSON.stringify(data),
+    { flag: "w" },
+    function (err) {
+      if (err) {
+        printError("", err, VERBOSE);
+      }
+    }
+  );
+}
 
 async function printDeviceInfo() {
   const spinner = ora({
@@ -10,6 +26,7 @@ async function printDeviceInfo() {
 
   spinner.start();
   const system = await deviceInfo();
+  saveToDisk(system);
   spinner.stop();
 
   console.log(system.hostname);
