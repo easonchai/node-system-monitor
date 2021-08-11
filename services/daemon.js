@@ -1,9 +1,9 @@
 #!/usr/bin/env node
-
+process.env["NTBA_FIX_319"] = 1;
+const TelegramBot = require("node-telegram-bot-api");
 const fs = require("fs");
 const path = require("path");
 const axios = require("axios");
-const TelegramBot = require("node-telegram-bot-api");
 const { printError } = require("../utils/helpers");
 const { setupInformation } = require("../utils/setup");
 const { deviceInfo } = require("../utils/info");
@@ -79,7 +79,7 @@ async function runDaemon() {
           username: "Node System Monitor",
         })
         .then(() => {
-          console.log("Online!");
+          console.log("Discord webhook online!");
         })
         .catch((err) => {
           console.log(err);
@@ -107,13 +107,16 @@ async function runDaemon() {
 
       const bot = new TelegramBot(token, { polling: true });
 
-      bot.onText(/\/query (.+)/, (msg) => {
+      console.log("Telegram bot online!");
+
+      bot.onText(/\/query/, (msg) => {
         const chatId = msg.chat.id;
         bot.sendMessage(chatId, content);
       });
 
       bot.on("message", (msg) => {
         const chatId = msg.chat.id;
+        if (msg == "/query") return;
         bot.sendMessage(chatId, "Type /query to query your system");
       });
     }
