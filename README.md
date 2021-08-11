@@ -4,7 +4,7 @@ A tool to monitor information about your Raspberry Pi & can be configured to upd
 
 ## Getting Started
 
-You need NodeJS installed on your system. If you don't have NodeJS installed, you can follow the script below:
+You need [NodeJS](https://nodejs.org/en/download/) installed on your system (and preferrably [yarn](https://yarnpkg.com/lang/en/docs/install/), but npm works just as well!). If you don't have NodeJS installed, you can follow the script below:
 
 ```bash
 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.38.0/install.sh | bash
@@ -16,10 +16,10 @@ npm i -g yarn
 yarn
 ```
 
-This will install NodeJS, npm, yarn & the required dependencies. Then, you can query your system's info using:
+This will install nvm, NodeJS, npm, yarn & the required dependencies. Then, you can query your system's info using:
 
 ```bash
-./query.sh
+node services/query.sh
 ```
 
 ### Modes
@@ -36,7 +36,7 @@ The second mode is daemon mode. This will run a Discord webhook & Telegram bot i
 npx pm2 start services/daemon.js
 ```
 
-The daemon process is handled by pm2. You can find more information on it's GitHub page. To stop the process, just type:
+The daemon process is handled by [pm2](https://github.com/Unitech/pm2). You can find more information on it's GitHub page. To stop the process, just type:
 
 ```bash
 npx pm2 stop daemon
@@ -44,5 +44,4 @@ npx pm2 stop daemon
 
 TODO:
 
-- [] Daemon mode
 - [] Check if bot is correct
