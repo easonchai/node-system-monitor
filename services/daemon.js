@@ -4,7 +4,13 @@ const fs = require("fs");
 const path = require("path");
 const axios = require("axios");
 const { exec } = require("child_process");
-const { printError, getArguments, checkDaemon } = require("../utils/helpers");
+const {
+  printError,
+  getArguments,
+  checkDaemon,
+  checkFrequency,
+  getFrequency,
+} = require("../utils/helpers");
 const { setupInformation } = require("../utils/setup");
 const { deviceInfo } = require("../utils/info");
 const { format } = require("../utils/output");
@@ -28,7 +34,7 @@ function saveToDisk(data) {
   );
 }
 
-function getDataOnInterval(duration = 60000) {
+function getDataOnInterval(duration = 600000) {
   interval = setInterval(async () => {
     const data = await deviceInfo();
     saveToDisk(data);
@@ -83,8 +89,14 @@ async function runDaemon() {
     });
   }
 
+  let frequency;
+  args.forEach((arg) => {
+    if (checkFrequency(arg)) frequency = getFrequency(arg);
+  });
+  console.log(frequency);
+
   if (!setup) {
-    getDataOnInterval();
+    getDataOnInterval(frequency);
 
     // First update
     const data = await deviceInfo();

@@ -23,9 +23,26 @@ function checkDaemon(argument) {
   return false;
 }
 
+function checkFrequency(argument) {
+  if (argument.startsWith("-f") || argument.startsWith("--frequency")) {
+    return true;
+  }
+  return false;
+}
+
+function getFrequency(argument) {
+  try {
+    return Number(argument.split("=")[1]);
+  } catch (err) {
+    return 600000;
+  }
+}
+
 module.exports = {
   printError,
   getArguments,
   checkVerbose,
   checkDaemon,
+  checkFrequency,
+  getFrequency,
 };
