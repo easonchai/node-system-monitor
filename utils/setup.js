@@ -1,14 +1,15 @@
 // https://discord.com/api/webhooks/874603485574885387/D8B3U_KREyUXFjw6_uDWLs2oaMV20FzIRBbMCyZL2Yup-qx-qOWE0lvGoAfCrMkNnsdW
 
 const { servicePrompt, updateSecrets } = require("./prompts");
-const { printError, getArguments } = require("./helpers");
+const { printError, getArguments, checkVerbose } = require("./helpers");
 const fs = require("fs");
 
 let VERBOSE = false;
 const filename = ".secret.json";
 
 async function setupInformation() {
-  VERBOSE = getArguments();
+  const args = getArguments();
+  VERBOSE = args.some((arg) => checkVerbose(arg));
 
   try {
     const services = await servicePrompt.run();

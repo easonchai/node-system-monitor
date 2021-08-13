@@ -69,21 +69,18 @@ async function runDaemon() {
 
   const args = getArguments();
   if (args && args.some((arg) => checkDaemon(arg))) {
-    exec(
-      "npx pm2 start services/daemon.js --daemon",
-      (error, stdout, stderr) => {
-        if (error) {
-          console.log(`ERROR: ${error.message}`);
-          return;
-        }
-        if (stderr) {
-          console.log(`STDERR: ${stderr}`);
-          return;
-        }
-        console.log(stdout);
-        process.exit(0);
+    exec("npx pm2 start services/daemon.js", (error, stdout, stderr) => {
+      if (error) {
+        console.log(`ERROR: ${error.message}`);
+        return;
       }
-    );
+      if (stderr) {
+        console.log(`STDERR: ${stderr}`);
+        return;
+      }
+      console.log(stdout);
+      process.exit(0);
+    });
   }
 
   if (!setup) {
