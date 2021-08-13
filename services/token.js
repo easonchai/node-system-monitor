@@ -4,8 +4,7 @@ const {
   addOrEditPrompt,
   editPrompt,
   addPrompt,
-  discordUrlPrompt,
-  telegramTokenPrompt,
+  updateSecrets,
 } = require("../utils/prompts");
 const secretFilename = ".secret.json";
 
@@ -38,37 +37,23 @@ async function promptUser() {
     }
 
     const services = await addPrompt(availableChoices).run();
-
     if (services.length < 1) {
       process.exit(0);
     }
 
-    for (const [_, service] of services.entries()) {
-      if (service === "Discord") {
-        const discordUrl = await discordUrlPrompt.run();
-        secret["discord"] = discordUrl;
-      } else if (service === "Telegram") {
-        const telegramToken = await telegramTokenPrompt.run();
-        secret["telegram"] = telegramToken;
-      }
-    }
+    secret = await updateSecrets(secret, services);
   } else if (choice == "Edit") {
     if (existingSecrets.length < 1) {
       console.log("No secrets exist. Add a secret first!");
       process.exit(0);
     }
 
-    const selectedChoices = await editPrompt(existingSecrets).run();
+    existingSecrets = existingSecrets.map(
+      (item) => item.charAt(0).toUpperCase() + item.substr(1, item.length)
+    );
 
-    for (const [_, service] of selectedChoices.entries()) {
-      if (service === "Discord") {
-        const discordUrl = await discordUrlPrompt.run();
-        secret["discord"] = discordUrl;
-      } else if (service === "Telegram") {
-        const telegramToken = await telegramTokenPrompt.run();
-        secret["telegram"] = telegramToken;
-      }
-    }
+    const selectedChoices = await editPrompt(existingSecrets).run();
+    secret = await updateSecrets(secret, selectedChoices);
   }
 
   fs.writeFile(

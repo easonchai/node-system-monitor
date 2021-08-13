@@ -37,6 +37,19 @@ const editPrompt = (choices) =>
     choices,
   });
 
+const updateSecrets = async (data, services) => {
+  for (const [_, service] of services.entries()) {
+    if (service === "Discord") {
+      const discordUrl = await discordUrlPrompt.run();
+      data["discord"] = discordUrl;
+    } else if (service === "Telegram") {
+      const telegramToken = await telegramTokenPrompt.run();
+      data["telegram"] = telegramToken;
+    }
+  }
+  return data;
+};
+
 module.exports = {
   servicePrompt,
   discordUrlPrompt,
@@ -44,4 +57,5 @@ module.exports = {
   addOrEditPrompt,
   addPrompt,
   editPrompt,
+  updateSecrets,
 };

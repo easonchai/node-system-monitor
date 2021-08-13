@@ -1,10 +1,6 @@
 // https://discord.com/api/webhooks/874603485574885387/D8B3U_KREyUXFjw6_uDWLs2oaMV20FzIRBbMCyZL2Yup-qx-qOWE0lvGoAfCrMkNnsdW
 
-const {
-  servicePrompt,
-  discordUrlPrompt,
-  telegramTokenPrompt,
-} = require("./prompts");
+const { servicePrompt, updateSecrets } = require("./prompts");
 const { printError, getArguments } = require("./helpers");
 const fs = require("fs");
 
@@ -23,16 +19,7 @@ async function setupInformation() {
     }
 
     let data = {};
-
-    for (const [_, service] of services.entries()) {
-      if (service === "Discord") {
-        const discordUrl = await discordUrlPrompt.run();
-        data["discord"] = discordUrl;
-      } else if (service === "Telegram") {
-        const telegramToken = await telegramTokenPrompt.run();
-        data["telegram"] = telegramToken;
-      }
-    }
+    data = await updateSecrets(data, services);
 
     fs.writeFile(
       `${__dirname}/../${filename}`,
