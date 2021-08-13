@@ -59,4 +59,8 @@ yarn daemon:stop
 
 Discord webhooks & Telegram bot tokens are immediately set up on first run.
 
-Currently, if you wish to edit your Discord webhook / Telegram bot token, you can manually delete .secret.json and run the daemon again. It will go through the setup again.
+If you wish to edit your Discord webhook / Telegram bot token, you can run
+
+```bash
+yarn setup
+```
