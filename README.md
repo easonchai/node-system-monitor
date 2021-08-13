@@ -55,6 +55,12 @@ The daemon process is handled by [pm2](https://github.com/Unitech/pm2). You can 
 yarn daemon:stop
 ```
 
+The default frequency the daemon pings Discord is `10 minutes` or `60000 milliseconds`. You can modify this by passing in the `--frequency` command line argument when starting the daemon as seen in the example below:
+
+```bash
+yarn daemon:start --frequency=120000
+```
+
 ### 🔑 Setting Up Tokens
 
 Discord webhooks & Telegram bot tokens are immediately set up on first run.

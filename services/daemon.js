@@ -93,7 +93,6 @@ async function runDaemon() {
   args.forEach((arg) => {
     if (checkFrequency(arg)) frequency = getFrequency(arg);
   });
-  console.log(frequency);
 
   if (!setup) {
     getDataOnInterval(frequency);
