@@ -1,6 +1,6 @@
 # ⏲ Node System Monitor
 
-A tool to monitor information about your device & can be configured to update its status via Discord webhooks/Telegram bot.
+A NodeJS based tool to monitor information about your device & can be configured to update its status via Discord webhooks/Telegram bot.
 
 ## 📝 Table of Contents
 
