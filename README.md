@@ -29,7 +29,13 @@ npm i -g yarn
 yarn
 ```
 
-This will install nvm, NodeJS, npm, yarn & the required dependencies. Then, you can query your system's info using:
+This will install nvm, NodeJS, npm, yarn & the required dependencies. If you already have NodeJS installed, you can just install the required dependencies:
+```bash
+npm i # Using npm
+
+yarn # Using yarn
+```
+Then, you can query your system's info using:
 
 ```bash
 yarn query
