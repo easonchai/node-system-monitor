@@ -32,7 +32,7 @@ yarn
 This will install nvm, NodeJS, npm, yarn & the required dependencies. Then, you can query your system's info using:
 
 ```bash
-node services/query.sh
+yarn query
 ```
 
 ### 💠 Modes
@@ -40,19 +40,19 @@ node services/query.sh
 There are two modes you can run it in. The first mode is the simplest. It basically tells you information about your device when you query it. To run this mode, you just need to enter:
 
 ```bash
-node services/query.js
+yarn query
 ```
 
 The second mode is daemon mode. This will run a Discord webhook & Telegram bot in the background for you to get updates from. It will run you through the basic setup process on first run. To activate it, just type:
 
 ```bash
-npx pm2 start services/daemon.js
+yarn daemon:start
 ```
 
 The daemon process is handled by [pm2](https://github.com/Unitech/pm2). You can find more information on it's GitHub page. To stop the process, just type:
 
 ```bash
-npx pm2 stop daemon
+yarn daemon:stop
 ```
 
 ### 🔑 Setting Up Tokens

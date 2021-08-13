@@ -6,6 +6,12 @@
   "repository": "git@github.com:easonchai/node-system-monitor.git",
   "author": "Eason Chai <echai2905@gmail.com>",
   "license": "MIT",
+  "scripts": {
+    "query": "node services/query.sh",
+    "daemon:start": "npx pm2 start services/daemon.js",
+    "daemon:stop": "npx pm2 stop daemon",
+    "setup": "node services/token.js"
+  },
   "dependencies": {
     "axios": "^0.21.1",
     "enquirer": "^2.3.6",

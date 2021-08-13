@@ -1,6 +1,6 @@
 const fs = require("fs");
 const path = require("path");
-const { addOrEditPrompt, editPrompt } = require("../utils/prompts");
+const { addOrEditPrompt, editPrompt, addPrompt } = require("../utils/prompts");
 const secretFilename = ".secret.json";
 
 async function promptUser() {
@@ -29,6 +29,8 @@ async function promptUser() {
       console.log("All secrets have been set up. You can't add any more");
       process.exit(0);
     }
+
+    // Add whatever we dont have
   } else if (choice == "Edit") {
     const selectedChoices = await editPrompt(existingSecrets).run();
 
