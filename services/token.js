@@ -52,24 +52,37 @@ async function promptUser() {
         secret["telegram"] = telegramToken;
       }
     }
-
-    fs.writeFile(
-      `${__dirname}/../${secretFilename}`,
-      JSON.stringify(secret),
-      { flag: "w" },
-      function (err) {
-        if (err) {
-          printError("Error saving to file.", err, VERBOSE);
-          process.exit(0);
-        }
-        console.log("\033[1;32mSetup successfull!\033[0m");
-      }
-    );
   } else if (choice == "Edit") {
+    if (existingSecrets.length < 1) {
+      console.log("No secrets exist. Add a secret first!");
+      process.exit(0);
+    }
+
     const selectedChoices = await editPrompt(existingSecrets).run();
 
-    // Do something
+    for (const [_, service] of selectedChoices.entries()) {
+      if (service === "Discord") {
+        const discordUrl = await discordUrlPrompt.run();
+        secret["discord"] = discordUrl;
+      } else if (service === "Telegram") {
+        const telegramToken = await telegramTokenPrompt.run();
+        secret["telegram"] = telegramToken;
+      }
+    }
   }
+
+  fs.writeFile(
+    `${__dirname}/../${secretFilename}`,
+    JSON.stringify(secret),
+    { flag: "w" },
+    function (err) {
+      if (err) {
+        printError("Error saving to file.", err, VERBOSE);
+        process.exit(0);
+      }
+      console.log("\033[1;32mSetup successfull!\033[0m");
+    }
+  );
 }
 
 promptUser();
