@@ -2,6 +2,12 @@
 
 A NodeJS based tool to monitor information about your device & can be configured to update its status via Discord webhooks/Telegram bot.
 
+<p align="center">
+	<br>
+	<img src="screenshot.svg" width="500">
+	<br>
+</p>
+
 ## 📝 Table of Contents
 
 - [Compatibility](#-compatibility)
