@@ -22,25 +22,21 @@ async function setupInformation() {
       process.exit(0);
     }
 
-    let data = "{ ";
+    let data = {};
 
-    for (const [index, service] of services.entries()) {
+    for (const [_, service] of services.entries()) {
       if (service === "Discord") {
         const discordUrl = await discordUrlPrompt.run();
-        data += `"discord": "${discordUrl}"`;
+        data["discord"] = discordUrl;
       } else if (service === "Telegram") {
         const telegramToken = await telegramTokenPrompt.run();
-        data += `"telegram": "${telegramToken}"`;
+        data["telegram"] = telegramToken;
       }
-
-      if (index != services.length - 1) data += ", ";
     }
-
-    data += " }";
 
     fs.writeFile(
       `${__dirname}/../${filename}`,
-      data,
+      JSON.parse(data),
       { flag: "w" },
       function (err) {
         if (err) {
