@@ -8,7 +8,7 @@
   "license": "MIT",
   "scripts": {
     "query": "node services/query.sh",
-    "daemon:start": "node services/daemon.js",
+    "daemon:start": "node services/daemon.js --daemon",
     "daemon:status": "npx pm2 status daemon",
     "daemon:restart": "npx pm2 restart daemon",
     "daemon:logs": "npx pm2 logs daemon",

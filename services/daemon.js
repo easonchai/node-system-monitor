@@ -4,7 +4,7 @@ const fs = require("fs");
 const path = require("path");
 const axios = require("axios");
 const { exec } = require("child_process");
-const { printError } = require("../utils/helpers");
+const { printError, getArguments, checkDaemon } = require("../utils/helpers");
 const { setupInformation } = require("../utils/setup");
 const { deviceInfo } = require("../utils/info");
 const { format } = require("../utils/output");
@@ -67,21 +67,32 @@ async function runDaemon() {
     }
   }
 
-  if (setup) {
-    exec("npx pm2 start services/daemon.js", (error, stdout, stderr) => {
-      if (error) {
-        console.log(`ERROR: ${error.message}`);
-        return;
+  const args = getArguments();
+  if (args && args.some((arg) => checkDaemon(arg))) {
+    exec(
+      "npx pm2 start services/daemon.js --daemon",
+      (error, stdout, stderr) => {
+        if (error) {
+          console.log(`ERROR: ${error.message}`);
+          return;
+        }
+        if (stderr) {
+          console.log(`STDERR: ${stderr}`);
+          return;
+        }
+        console.log(stdout);
+        process.exit(0);
       }
-      if (stderr) {
-        console.log(`STDERR: ${stderr}`);
-        return;
-      }
-      console.log(stdout);
-      process.exit(0);
-    });
-  } else {
+    );
+  }
+
+  if (!setup) {
     getDataOnInterval();
+
+    // First update
+    const data = await deviceInfo();
+    saveToDisk(data);
+    content = format(data, false);
 
     if (secret) {
       if (secret["discord"]) {
@@ -96,11 +107,6 @@ async function runDaemon() {
           .catch((err) => {
             console.log(err);
           });
-
-        // First update
-        const data = await deviceInfo();
-        saveToDisk(data);
-        content = format(data, false);
 
         axios
           .post(secret["discord"], {
