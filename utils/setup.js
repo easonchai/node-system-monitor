@@ -23,7 +23,7 @@ async function setupInformation() {
 
     fs.writeFile(
       `${__dirname}/../${filename}`,
-      JSON.parse(data),
+      JSON.stringify(data),
       { flag: "w" },
       function (err) {
         if (err) {

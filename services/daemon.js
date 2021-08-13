@@ -3,6 +3,7 @@ const TelegramBot = require("node-telegram-bot-api");
 const fs = require("fs");
 const path = require("path");
 const axios = require("axios");
+const { exec } = require("child_process");
 const { printError } = require("../utils/helpers");
 const { setupInformation } = require("../utils/setup");
 const { deviceInfo } = require("../utils/info");
@@ -12,6 +13,7 @@ const systemFilename = "system.json";
 let interval;
 let secret;
 let content;
+let setup = false;
 
 function saveToDisk(data) {
   fs.writeFile(
@@ -50,10 +52,6 @@ function getDataOnInterval(duration = 60000) {
   return interval;
 }
 
-function killInterval(interval) {
-  clearInterval(interval);
-}
-
 async function runDaemon() {
   try {
     secret = JSON.parse(
@@ -61,66 +59,82 @@ async function runDaemon() {
     );
   } catch (error) {
     if (error && error.code == "ENOENT") {
-      secret = JSON.parse(await setupInformation());
+      setup = true;
+      secret = await setupInformation();
     } else if (error && error.code != "ENOENT") {
       printError("Error reading secret file...", error, true);
       process.exit(0);
     }
   }
 
-  getDataOnInterval();
+  exec("npx pm2 start services/daemon.js", (error, stdout, stderr) => {
+    if (error) {
+      console.log(`ERROR: ${error.message}`);
+      return;
+    }
+    if (stderr) {
+      console.log(`STDERR: ${stderr}`);
+      return;
+    }
+    console.log(stdout);
+    process.exit(0);
+  });
 
-  if (secret) {
-    if (secret["discord"]) {
-      axios
-        .post(secret["discord"], {
-          content: "✅ Node System Monitor is online!",
-          username: "Node System Monitor",
-        })
-        .then(() => {
-          console.log("Discord webhook online!");
-        })
-        .catch((err) => {
-          console.log(err);
+  if (!setup) {
+    getDataOnInterval();
+
+    if (secret) {
+      if (secret["discord"]) {
+        axios
+          .post(secret["discord"], {
+            content: "✅ Node System Monitor is online!",
+            username: "Node System Monitor",
+          })
+          .then(() => {
+            console.log("Discord webhook online!");
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+
+        // First update
+        const data = await deviceInfo();
+        saveToDisk(data);
+        content = format(data, false);
+
+        axios
+          .post(secret["discord"], {
+            content,
+            username: data.hostname,
+          })
+          .then(() => {
+            console.log("Update success");
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      }
+      if (secret["telegram"]) {
+        const token = secret["telegram"];
+
+        const bot = new TelegramBot(token, { polling: true });
+
+        console.log("Telegram bot online! Type /query to query your system");
+
+        bot.onText(/\/query/, (msg) => {
+          const chatId = msg.chat.id;
+          bot.sendMessage(chatId, content);
         });
 
-      // First update
-      const data = await deviceInfo();
-      saveToDisk(data);
-      content = format(data, false);
-
-      axios
-        .post(secret["discord"], {
-          content,
-          username: data.hostname,
-        })
-        .then(() => {
-          console.log("Update success");
-        })
-        .catch((err) => {
-          console.log(err);
+        bot.on("message", (msg) => {
+          const chatId = msg.chat.id;
+          if (msg == "/query") return;
+          bot.sendMessage(chatId, "Type /query to query your system");
         });
+      }
+    } else {
+      await setupInformation();
     }
-    if (secret["telegram"]) {
-      const token = secret["telegram"];
-
-      const bot = new TelegramBot(token, { polling: true });
-
-      console.log("Telegram bot online!");
-
-      bot.onText(/\/query/, (msg) => {
-        const chatId = msg.chat.id;
-        bot.sendMessage(chatId, content);
-      });
-
-      bot.on("message", (msg) => {
-        const chatId = msg.chat.id;
-        if (msg == "/query") return;
-        bot.sendMessage(chatId, "Type /query to query your system");
-      });
-    }
-  } else {
-    await setupInformation();
   }
 }
 

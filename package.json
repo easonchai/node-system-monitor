@@ -9,6 +9,9 @@
   "scripts": {
     "query": "node services/query.sh",
     "daemon:start": "npx pm2 start services/daemon.js",
+    "daemon:status": "npx pm2 status daemon",
+    "daemon:restart": "npx pm2 restart daemon",
+    "daemon:logs": "npx pm2 logs daemon",
     "daemon:stop": "npx pm2 stop daemon",
     "setup": "node services/token.js"
   },
