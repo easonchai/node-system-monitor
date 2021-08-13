@@ -128,7 +128,7 @@ async function runDaemon() {
 
         bot.on("message", (msg) => {
           const chatId = msg.chat.id;
-          if (msg == "/query") return;
+          if (msg.text == "/query") return;
           bot.sendMessage(chatId, "Type /query to query your system");
         });
       }
