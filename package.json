@@ -7,7 +7,7 @@
   "author": "Eason Chai <echai2905@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "query": "node services/query.sh",
+    "query": "node services/query.js",
     "daemon:start": "node services/daemon.js --daemon",
     "daemon:status": "npx pm2 status daemon",
     "daemon:restart": "npx pm2 restart daemon",
